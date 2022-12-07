@@ -27,7 +27,7 @@ public class MemoryManager {
     }
 
     public void setMemorySize(int memorySize) {
-        this.memorySize = memorySize;
+        this.memorySize = memorySize - 1;
     }
 
     public void firstFit(Job job) {
@@ -40,6 +40,11 @@ public class MemoryManager {
                 break;
             }
         }
+    }
+
+    public void bestFit(Job job) {
+
+        
     }
 
     public void addFirstBlock() {

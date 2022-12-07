@@ -5,7 +5,7 @@ public class Job {
     private int id;
     private int size;
     private String type;
-
+    
     public Job (String type, int id, int size) {
         this.id = id;
         this.size = size;

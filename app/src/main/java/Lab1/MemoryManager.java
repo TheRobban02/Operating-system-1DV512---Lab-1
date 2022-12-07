@@ -1,8 +1,6 @@
 package Lab1;
 
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class MemoryManager {
     
@@ -10,7 +8,7 @@ public class MemoryManager {
     private ArrayList<Block> memoryList;
     private ArrayList<Job> jobList;
 
-    public MemoryManager(int memorySize) {
+    public MemoryManager() {
         this.memorySize = memorySize - 1;
         this.jobList = new ArrayList<>();
         this.memoryList = new ArrayList<>();
@@ -26,6 +24,10 @@ public class MemoryManager {
 
     public ArrayList<Block> getMemoryList() {
         return memoryList;
+    }
+
+    public void setMemorySize(int memorySize) {
+        this.memorySize = memorySize;
     }
 
     public void firstFit(Job job) {
@@ -71,5 +73,23 @@ public class MemoryManager {
                 }
             }
         }
+    }
+
+    public double calculateFragmentation() {
+
+        double largestFreeMemoryblock = 0;
+        double totalFreeMemory = 0;
+
+        for (Block block : memoryList) {
+            if(block.getJob() == null) {
+                double blockSize = (block.getEndAdress() + 1) - block.getStartAdress();
+                if(blockSize > largestFreeMemoryblock) {
+                    largestFreeMemoryblock = blockSize;
+                }
+                totalFreeMemory += blockSize;
+            }
+        }
+
+        return (1 - (largestFreeMemoryblock / totalFreeMemory));
     }
 }

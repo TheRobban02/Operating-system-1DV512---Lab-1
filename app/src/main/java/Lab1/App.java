@@ -3,34 +3,22 @@
  */
 package Lab1;
 
+import java.io.IOException;
+
 public class App {
 
     public static void main(String[] args) {
-
-        MemoryManager mem = new MemoryManager(1000);
-        mem.addFirstBlock();
-
-        Job job1 = new Job("A", 0, 100);
-        Job job2 = new Job("A", 1, 100);
-        Job job3 = new Job("A", 2, 500);
-        Job job4 = new Job("D", 1);
-        Job job5 = new Job("A", 3, 200);
-        Job job6 = new Job("D", 2);
-        Job job7 = new Job("O");
-        Job job8 = new Job("A", 4, 1500);
-        Job job9 = new Job("D", 4);
-        Job job10 = new Job("D", 5);
+       
+        MemoryManager mem = new MemoryManager();
+        MemoryIO memIO = new MemoryIO();
         
-        mem.addJob(job1);
-        mem.addJob(job2);
-        mem.addJob(job3);
-        mem.addJob(job4);
-        mem.addJob(job5);
-        mem.addJob(job6);
-        mem.addJob(job7);
-        mem.addJob(job8);
-        mem.addJob(job9);
-        mem.addJob(job10);
+        try {
+            memIO.load(mem);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        mem.addFirstBlock();
 
         for (Job job : mem.getJobList()) {
             if(job.getType().equals("A")) {
@@ -38,18 +26,30 @@ public class App {
             } else if(job.getType().equals("D")) {
                 mem.deAllocation(job);
             }
-            // switch(job.getType()) {
-            //     case "A":
-            //         mem.firstFit(job);
-            //     case "D":
-            //         mem.deAllocation(job);
-            //     case "O":
-            //         //TODO
-            //     case "C":
-            //         //TODO
-            // }
         }
+
+        // Job job1 = new Job("A", 0, 100);
+        // Job job2 = new Job("A", 1, 100);
+        // Job job3 = new Job("A", 2, 500);
+        // Job job4 = new Job("D", 1);
+        // Job job5 = new Job("A", 3, 200);
+        // Job job6 = new Job("D", 2);
+        // Job job7 = new Job("O");
+        // Job job8 = new Job("A", 4, 1500);
+        // Job job9 = new Job("D", 4);
+        // Job job10 = new Job("D", 5);
         
+        // mem.addJob(job1);
+        // mem.addJob(job2);
+        // mem.addJob(job3);
+        // mem.addJob(job4);
+        // mem.addJob(job5);
+        // mem.addJob(job6);
+        // mem.addJob(job7);
+        // mem.addJob(job8);
+        // mem.addJob(job9);
+        // mem.addJob(job10);
+
         System.out.println("Allocated blocks: ");
         for (Block block : mem.getMemoryList()) { //Allocated blocks
 
@@ -65,5 +65,7 @@ public class App {
                 System.out.println(block.getStartAdress() + ";" + block.getEndAdress());
             }
         }
+
+        System.out.printf("Fragmentation %.6f%n", mem.calculateFragmentation());
     }
 }

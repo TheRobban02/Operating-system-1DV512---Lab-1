@@ -3,20 +3,27 @@
  */
 package Lab1;
 
+import java.io.IOException;
+
 public class App {
 
     public static void main(String[] args) {
        
-        MemoryManager mem = new MemoryManager();
+        List list = new List();
         MemoryIO memIO = new MemoryIO();
-        
         MemoryController memoryController = new MemoryController();
-        memoryController.firstFit(mem, memIO);
+
+        list = memoryController.firstFit(memIO, list);
         
-        MemoryManager mem2 = new MemoryManager();
+        List list2 = new List();
         MemoryIO memIO2 = new MemoryIO();
-        
         MemoryController memoryController2 = new MemoryController();
-        memoryController2.bestFit(mem2, memIO2);
+
+        list2 = memoryController2.bestFit(memIO2, list2);
+        try {
+            memIO2.writeToFile(list, list2, 0, memoryController2);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

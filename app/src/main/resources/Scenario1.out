@@ -7,3 +7,12 @@ Free blocks
 900;999
 Fragmentation
 0.142857
+Best fit
+Allocated blocks
+3;600;799
+Free blocks
+0;599
+100;999
+800;999
+Fragmentation
+0.470588

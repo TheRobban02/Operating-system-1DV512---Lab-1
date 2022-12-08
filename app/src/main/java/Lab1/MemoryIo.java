@@ -7,11 +7,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.text.DecimalFormat;
 
 public class MemoryIO {
 
-  public void writeToFile(MemoryManager mem, int counter) throws IOException {
+  public void writeToFile(List firstFit, List bestFit, int counter, MemoryController memoryController) throws IOException {
     String strCounter;
     if(counter == 0) {
       strCounter = "";
@@ -22,21 +21,39 @@ public class MemoryIO {
     try {
       writer.write("First fit\n");
       writer.write("Allocated blocks\n");
-      for (Block block : mem.getMemoryList()) { // Allocated blocks
+      for (Block block : firstFit.getMemoryList()) { // Allocated blocks
         if (block.getJob() != null) {
           writer.write(block.getJob().getId() + ";" + block.getStartAdress() + ";" + block.getEndAdress() + "\n");
         }
       }
       writer.write("Free blocks\n");
-      for (Block block : mem.getMemoryList()) { // Allocated blocks
+      for (Block block : firstFit.getMemoryList()) { // Allocated blocks
         if (block.getJob() == null) {
           writer.write(block.getStartAdress() + ";" + block.getEndAdress() + "\n");
         }
       }
 
       writer.write("Fragmentation\n");
-      double roundedFrag = roundAvoid(mem.calculateFragmentation(), 6);
-      writer.write(roundedFrag+"");
+      double roundedFrag = roundAvoid(memoryController.calculateFragmentation(firstFit), 6);
+      writer.write(roundedFrag+"\n");
+
+      writer.write("Best fit\n");
+      writer.write("Allocated blocks\n");
+      for (Block block : bestFit.getMemoryList()) { // Allocated blocks
+        if (block.getJob() != null) {
+          writer.write(block.getJob().getId() + ";" + block.getStartAdress() + ";" + block.getEndAdress() + "\n");
+        }
+      }
+      writer.write("Free blocks\n");
+      for (Block block : bestFit.getMemoryList()) { // Allocated blocks
+        if (block.getJob() == null) {
+          writer.write(block.getStartAdress() + ";" + block.getEndAdress() + "\n");
+        }
+      }
+
+      writer.write("Fragmentation\n");
+      roundedFrag = roundAvoid(memoryController.calculateFragmentation(bestFit), 6);
+      writer.write(roundedFrag+"\n");
 
     } finally {
       writer.close();
@@ -49,7 +66,7 @@ public class MemoryIO {
     return Math.round(value * scale) / scale;
   }
 
-  public void load(MemoryManager mem) throws IOException {
+  public void load(List mem) throws IOException {
 
     File file = new File("app/src/main/resources/Scenario1.in");
 

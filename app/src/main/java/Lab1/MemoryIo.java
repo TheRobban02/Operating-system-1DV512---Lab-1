@@ -7,31 +7,51 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
 
 public class MemoryIO {
 
-  public void writeToFile(MemoryManager mem) throws IOException {
-    FileWriter writer = new FileWriter("savefile.data", StandardCharsets.UTF_8);
+  public void writeToFile(MemoryManager mem, int counter) throws IOException {
+    String strCounter;
+    if(counter == 0) {
+      strCounter = "";
+    } else {
+      strCounter = Integer.toString(counter);
+    }
+    FileWriter writer = new FileWriter("app/src/main/resources/Scenario1" + ".out" + strCounter, StandardCharsets.UTF_8);
     try {
       writer.write("First fit\n");
-      for (Block block : mem.getMemoryList()) { //Allocated blocks
-
-        if(block.getJob() != null) {
-            writer.write("Allocated blocks\n" + block.getJob().getId() + ";" + block.getStartAdress() + ";" + block.getEndAdress()+"\n");
-        } else if (block.getJob() == null) {
-          writer.write("Free blocks\n" + block.getStartAdress() + ";" + block.getEndAdress());
+      writer.write("Allocated blocks\n");
+      for (Block block : mem.getMemoryList()) { // Allocated blocks
+        if (block.getJob() != null) {
+          writer.write(block.getJob().getId() + ";" + block.getStartAdress() + ";" + block.getEndAdress() + "\n");
         }
+      }
+      writer.write("Free blocks\n");
+      for (Block block : mem.getMemoryList()) { // Allocated blocks
+        if (block.getJob() == null) {
+          writer.write(block.getStartAdress() + ";" + block.getEndAdress() + "\n");
+        }
+      }
 
-    }
+      writer.write("Fragmentation\n");
+      double roundedFrag = roundAvoid(mem.calculateFragmentation(), 6);
+      writer.write(roundedFrag+"");
+
     } finally {
       writer.close();
     }
 
   }
 
+  public double roundAvoid(double value, int places) {
+    double scale = Math.pow(10, places);
+    return Math.round(value * scale) / scale;
+  }
+
   public void load(MemoryManager mem) throws IOException {
 
-    File file = new File("app/src/test/resources/scenario1.in");
+    File file = new File("app/src/main/resources/Scenario1.in");
 
     try (BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
 
